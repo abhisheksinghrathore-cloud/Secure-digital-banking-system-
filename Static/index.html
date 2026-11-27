@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Secure Digital Banking</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="app">
+  <div class="brand">
+    <div class="brand-mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M4 9l8-5 8 5M5 10v8M19 10v8M9 10v8M15 10v8M3 20h18"/></svg>
+    </div>
+    <div>
+      <div class="brand-name">Secure Digital Banking</div>
+      <div class="brand-sub">2-step login &middot; trusted device &middot; paperless forms</div>
+    </div>
+  </div>
+
+  <!-- AUTH -->
+  <div id="screen-auth" class="card">
+    <div class="tabs" id="auth-tabs" role="tablist">
+      <button class="tab" id="tab-login" role="tab" aria-selected="true">Log in</button>
+      <button class="tab" id="tab-create" role="tab" aria-selected="false">Create account</button>
+    </div>
+
+    <div id="view-login">
+      <h1>Log in</h1>
+      <p class="lead">Step 1 of 2 &mdash; account number and PIN.</p>
+      <div class="msg error" id="lock-banner" hidden></div>
+      <label for="login-acc">Account number</label>
+      <input id="login-acc" class="mono" inputmode="numeric" maxlength="12" placeholder="1001" autocomplete="username">
+      <label for="login-pin">PIN</label>
+      <input id="login-pin" class="mono" type="password" inputmode="numeric" maxlength="4" placeholder="&bull;&bull;&bull;&bull;" autocomplete="current-password">
+      <label class="check-row"><input type="checkbox" id="login-new-device"> Demo: pretend I'm logging in from a new, unrecognized device</label>
+      <button class="primary" id="btn-login">Continue</button>
+      <div class="msg error" id="login-msg" hidden></div>
+    </div>
+
+    <div id="view-otp" hidden>
+      <h1>Verify it's you</h1>
+      <p class="lead">Step 2 of 2 &mdash; enter the 6-digit code sent to your registered phone.</p>
+      <div class="msg info" id="otp-info"></div>
+      <label for="otp-input">One-time passcode</label>
+      <input id="otp-input" class="mono otp-input" inputmode="numeric" maxlength="6" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;" autocomplete="one-time-code">
+      <button class="primary" id="btn-verify-otp">Verify &amp; continue</button>
+      <button class="ghost full" id="btn-otp-back">Back</button>
+      <div class="msg error" id="otp-msg" hidden></div>
+    </div>
+
+    <div id="view-create" hidden>
+      <h1>Create account</h1>
+      <p class="lead">This device becomes your trusted device for money transactions.</p>
+      <label for="create-name">Full name</label>
+      <input id="create-name" maxlength="60" placeholder="Ravi Kumar" autocomplete="name">
+      <label for="create-phone">Registered mobile number</label>
+      <input id="create-phone" class="mono" inputmode="numeric" maxlength="10" placeholder="9876543210" autocomplete="tel">
+      <label for="create-pin">Set a 4-digit PIN</label>
+      <input id="create-pin" class="mono" type="password" inputmode="numeric" maxlength="4" placeholder="&bull;&bull;&bull;&bull;" autocomplete="new-password">
+      <button class="primary" id="btn-create">Create account</button>
+      <div class="msg" id="create-msg" hidden></div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="screen-dashboard" class="card" hidden>
+    <div id="device-banner" class="banner red" hidden>
+      <span id="device-banner-text"></span>
+      <button class="ghost" id="btn-go-device-form">Request a device change</button>
+    </div>
+
+    <div class="hello" id="dash-hello"></div>
+    <div class="balance-row">
+      <div><div class="balance-label">Balance</div><div class="balance-amt" id="dash-balance">0.00</div></div>
+      <div class="acc-chip" id="dash-acc"></div>
+    </div>
+
+    <div class="actions" id="actions">
+      <button class="action-btn" data-action="deposit" aria-pressed="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>Deposit</button>
+      <button class="action-btn" data-action="withdraw" aria-pressed="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>Withdraw</button>
+      <button class="action-btn" data-action="transfer" aria-pressed="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17 3l4 4-4 4M21 7H7M7 21l-4-4 4-4M3 17h14"/></svg>Transfer</button>
+      <button class="action-btn" data-action="history" aria-pressed="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5M12 7v5l3 3"/></svg>History</button>
+      <button class="action-btn" data-action="forms" aria-pressed="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg>Forms</button>
+    </div>
+
+    <div class="panel" id="panel-deposit" hidden>
+      <h2>Deposit</h2>
+      <label for="deposit-amt">Amount (&#8377;)</label>
+      <input id="deposit-amt" class="mono" inputmode="decimal" maxlength="12" placeholder="0.00">
+      <button class="primary" id="btn-deposit">Confirm deposit</button>
+      <div class="msg" id="deposit-msg" hidden></div>
+    </div>
+
+    <div class="panel" id="panel-withdraw" hidden>
+      <h2>Withdraw</h2>
+      <label for="withdraw-amt">Amount (&#8377;)</label>
+      <input id="withdraw-amt" class="mono" inputmode="decimal" maxlength="12" placeholder="0.00">
+      <button class="primary" id="btn-withdraw">Confirm withdrawal</button>
+      <div class="msg" id="withdraw-msg" hidden></div>
+    </div>
+
+    <div class="panel" id="panel-transfer" hidden>
+      <h2>Transfer</h2>
+      <label for="transfer-acc">Target account number</label>
+      <input id="transfer-acc" class="mono" inputmode="numeric" maxlength="12" placeholder="1002">
+      <label for="transfer-amt">Amount (&#8377;)</label>
+      <input id="transfer-amt" class="mono" inputmode="decimal" maxlength="12" placeholder="0.00">
+      <button class="primary" id="btn-transfer">Confirm transfer</button>
+      <div class="msg" id="transfer-msg" hidden></div>
+    </div>
+
+    <div class="panel" id="panel-history" hidden>
+      <h2>Transaction history</h2>
+      <ul class="history" id="history-list"></ul>
+      <div class="empty" id="history-empty" hidden>No transactions yet.</div>
+    </div>
+
+    <div class="panel" id="panel-forms" hidden>
+      <h2>Service requests &mdash; no paperwork needed</h2>
+      <div class="chip-row" id="form-type-chips"></div>
+      <div class="msg info" id="form-note" hidden></div>
+      <div id="form-fields"></div>
+      <button class="primary" id="btn-submit-form">Submit request</button>
+      <div class="msg" id="form-msg" hidden></div>
+      <h2 class="sub-head">My requests</h2>
+      <ul class="req-list" id="req-list"></ul>
+      <div class="empty" id="req-empty" hidden>No service requests submitted yet.</div>
+    </div>
+
+    <button class="logout" id="btn-logout">Log out</button>
+  </div>
+</div>
+<script src="/static/app.js"></script>
+</body>
+</html>
